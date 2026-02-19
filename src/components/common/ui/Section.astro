@@ -1,0 +1,47 @@
+---
+import Container from "./Container.astro";
+
+interface Props {
+    className?: string;
+    id?: string;
+    withContainer?: boolean;
+    theme?: "light" | "dark";
+}
+
+const {
+    className = "",
+    id,
+    withContainer = true,
+    theme = "dark",
+} = Astro.props;
+---
+
+<section
+    id={id}
+    data-theme={theme}
+    class:list={[
+        "py-24 md:py-32 relative border-b border-border-color bg-[var(--bg-primary)] transition-colors duration-500",
+        className,
+    ]}
+>
+    <!-- Background Grid Logic -->
+    <div
+        class="absolute inset-0 z-0 pointer-events-none opacity-20"
+        style="background-size: 80px 80px; background-image: linear-gradient(to right, var(--grid-color) 1px, transparent 1px), linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);"
+    >
+    </div>
+
+    <slot name="background" />
+
+    <div class="relative z-10">
+        {
+            withContainer ? (
+                <Container>
+                    <slot />
+                </Container>
+            ) : (
+                <slot />
+            )
+        }
+    </div>
+</section>

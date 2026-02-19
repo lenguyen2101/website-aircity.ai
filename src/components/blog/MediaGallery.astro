@@ -1,0 +1,218 @@
+---
+interface Props {
+    images: {
+        src: string;
+        alt?: string;
+    }[];
+}
+
+const { images } = Astro.props;
+---
+
+<div class="media-gallery-container my-12">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {
+            images.map((img, index) => (
+                <div
+                    class="gallery-item relative aspect-square rounded-xl overflow-hidden glass-card cursor-pointer group"
+                    data-src={img.src}
+                    data-index={index}
+                >
+                    <img
+                        src={img.src}
+                        alt={img.alt || ""}
+                        class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        loading="lazy"
+                    />
+                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="text-white opacity-0 group-hover:opacity-100 transition-opacity transform scale-50 group-hover:scale-100 duration-300"
+                        >
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            <line x1="11" y1="8" x2="11" y2="14" />
+                            <line x1="8" y1="11" x2="14" y2="11" />
+                        </svg>
+                    </div>
+                </div>
+            ))
+        }
+    </div>
+
+    <!-- Lightbox -->
+    <div
+        id="lightbox"
+        class="fixed inset-0 z-[100] bg-dark-950/95 backdrop-blur-sm hidden flex-col items-center justify-center p-4"
+    >
+        <button
+            id="lightbox-close"
+            class="absolute top-6 right-6 text-white hover:text-primary-400 p-2 transition-colors"
+        >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="32"
+                height="32"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                ><line x1="18" y1="6" x2="6" y2="18"></line><line
+                    x1="6"
+                    y1="6"
+                    x2="18"
+                    y2="18"></line>
+            </svg>
+        </button>
+
+        <button
+            id="lightbox-prev"
+            class="absolute left-6 top-1/2 -translate-y-1/2 text-white hover:text-primary-400 p-2 transition-colors bg-white/5 rounded-full backdrop-blur-md border border-white/10"
+        >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                ><polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
+
+        <button
+            id="lightbox-next"
+            class="absolute right-6 top-1/2 -translate-y-1/2 text-white hover:text-primary-400 p-2 transition-colors bg-white/5 rounded-full backdrop-blur-md border border-white/10"
+        >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                ><polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </button>
+
+        <div
+            class="relative max-w-5xl w-full h-[80vh] flex items-center justify-center"
+        >
+            <img
+                id="lightbox-img"
+                src=""
+                alt=""
+                class="max-w-full max-h-full object-contain shadow-2xl rounded-lg"
+            />
+        </div>
+
+        <div id="lightbox-caption" class="mt-6 text-white text-lg font-medium">
+        </div>
+        <div id="lightbox-counter" class="mt-2 text-slate-400 text-sm"></div>
+    </div>
+</div>
+
+<script>
+    function setupLightbox() {
+        const galleryItems = document.querySelectorAll(".gallery-item");
+        const lightbox = document.getElementById("lightbox");
+        const lightboxImg = document.getElementById(
+            "lightbox-img"
+        ) as HTMLImageElement;
+        const lightboxCaption = document.getElementById("lightbox-caption");
+        const lightboxCounter = document.getElementById("lightbox-counter");
+        const closeBtn = document.getElementById("lightbox-close");
+        const prevBtn = document.getElementById("lightbox-prev");
+        const nextBtn = document.getElementById("lightbox-next");
+
+        if (!lightbox || !lightboxImg) return;
+
+        let currentIndex = 0;
+        const images = Array.from(galleryItems).map((item) => ({
+            src: item.getAttribute("data-src") || "",
+            alt: item.querySelector("img")?.getAttribute("alt") || "",
+        }));
+
+        function openLightbox(index: number) {
+            currentIndex = index;
+            updateLightbox();
+            lightbox!.classList.remove("hidden");
+            lightbox!.classList.add("flex");
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeLightbox() {
+            lightbox!.classList.add("hidden");
+            lightbox!.classList.remove("flex");
+            document.body.style.overflow = "";
+        }
+
+        function updateLightbox() {
+            const img = images[currentIndex];
+            lightboxImg.src = img.src;
+            lightboxImg.alt = img.alt;
+            if (lightboxCaption) lightboxCaption.textContent = img.alt;
+            if (lightboxCounter)
+                lightboxCounter.textContent = `${currentIndex + 1} / ${
+                    images.length
+                }`;
+        }
+
+        function showNext() {
+            currentIndex = (currentIndex + 1) % images.length;
+            updateLightbox();
+        }
+
+        function showPrev() {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            updateLightbox();
+        }
+
+        galleryItems.forEach((item, index) => {
+            item.addEventListener("click", () => openLightbox(index));
+        });
+
+        closeBtn?.addEventListener("click", closeLightbox);
+        nextBtn?.addEventListener("click", showNext);
+        prevBtn?.addEventListener("click", showPrev);
+
+        lightbox.addEventListener("click", (e) => {
+            if (e.target === lightbox) closeLightbox();
+        });
+
+        document.addEventListener("keydown", (e) => {
+            if (lightbox.classList.contains("hidden")) return;
+            if (e.key === "Escape") closeLightbox();
+            if (e.key === "ArrowRight") showNext();
+            if (e.key === "ArrowLeft") showPrev();
+        });
+    }
+
+    // Initialize on page load and after swaps (Astro view transitions support)
+    setupLightbox();
+    document.addEventListener("astro:after-swap", setupLightbox);
+</script>
+
+<style>
+    .glass-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+</style>

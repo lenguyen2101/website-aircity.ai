@@ -1,0 +1,93 @@
+---
+import "../styles/global.css";
+import Header from "../components/common/Header.astro";
+import Footer from "../components/common/Footer.astro";
+import { getLangFromUrl } from "../i18n/utils";
+
+const lang = getLangFromUrl(Astro.url);
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  type?: "website" | "article";
+  fullWidth?: boolean;
+}
+
+const {
+  title,
+  description = "AirCity - Nền tảng quản lý tòa nhà thông minh hàng đầu Việt Nam, ứng dụng AI & IoT để tối ưu vận hành và nâng cao trải nghiệm cư dân.",
+  image = "/og-image.jpg",
+  type = "website",
+  fullWidth = false,
+} = Astro.props;
+
+const canonicalURL = new URL(
+  Astro.url.pathname,
+  Astro.site || Astro.url.origin
+);
+const socialImageURL = new URL(image, Astro.url);
+---
+
+<!DOCTYPE html>
+<html lang={lang} class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Primary Meta Tags -->
+    <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={socialImageURL} />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={socialImageURL} />
+
+    <!-- Fonts: Self-hosted via @fontsource in global.css -->
+  </head>
+  <body class="antialiased selection:bg-primary-500/30 selection:text-white">
+    <Header />
+    <main
+      class:list={["min-h-screen pt-20", !fullWidth && "overflow-x-hidden"]}
+    >
+      <slot />
+    </main>
+    <Footer />
+
+    <!-- Scroll Reveal Script -->
+    <script>
+      // Only verify if we have elements to animate, otherwise this script is lightweight enough
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px",
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("revealed");
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll(".animate-reveal").forEach((el) => {
+        observer.observe(el);
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,381 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection, render } from "astro:content";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts.map((post) => ({
+    params: { slug: post.id.replace(/\.mdx?$/, "") },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString("vi-VN", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
+function estimateReadTime(body: string): number {
+  const words = body.split(/\s+/).length;
+  return Math.max(1, Math.ceil(words / 200));
+}
+
+const categoryLabels: Record<string, string> = {
+  technology: "Công nghệ",
+  insights: "Insights",
+  product: "Sản phẩm",
+  news: "Tin tức",
+  press: "Báo chí & Đối tác",
+  updates: "Cập nhật Công ty",
+};
+---
+
+<BaseLayout
+  title={`${post.data.title} — AirCity Blog`}
+  description={post.data.description}
+>
+  <article class="relative">
+    <!-- Article Hero -->
+    <section class="relative pt-32 pb-16 overflow-hidden">
+      <div class="absolute inset-0">
+        <div
+          class="absolute inset-0 bg-gradient-to-b from-dark-950 via-dark-900 to-dark-950"
+        >
+        </div>
+        <div class="grid-pattern"></div>
+        <div
+          class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-primary-500/8 rounded-full blur-[120px]"
+        >
+        </div>
+      </div>
+
+      <div class="section-container relative z-10">
+        <div class="max-w-3xl mx-auto">
+          <!-- Back link -->
+          <a
+            href="/blog"
+            class="animate-reveal inline-flex items-center gap-2 text-secondary hover:text-primary-400 transition-colors mb-8 text-sm"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M19 12H5M12 19l-7-7 7-7"></path>
+            </svg>
+            Quay lại Blog
+          </a>
+
+          <!-- Category -->
+          <div class="animate-reveal mb-4" style="animation-delay: 0.05s;">
+            <span
+              class="inline-flex px-3 py-1 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-xs font-semibold uppercase tracking-wider"
+            >
+              {categoryLabels[post.data.category]}
+            </span>
+          </div>
+
+          <!-- Title -->
+          <h1
+            class="animate-reveal text-3xl md:text-4xl lg:text-5xl font-bold text-primary leading-tight mb-6"
+            style="animation-delay: 0.1s;"
+          >
+            {post.data.title}
+          </h1>
+
+          <!-- Meta -->
+          <div
+            class="animate-reveal flex flex-wrap items-center gap-4 text-sm text-secondary"
+            style="animation-delay: 0.15s;"
+          >
+            <div class="flex items-center gap-2">
+              <div
+                class="w-8 h-8 rounded-full bg-primary-500/20 flex items-center justify-center text-primary-400 text-xs font-bold"
+              >
+                {post.data.author.charAt(0)}
+              </div>
+              <span class="text-secondary">{post.data.author}</span>
+            </div>
+            <span>·</span>
+            <span>{formatDate(post.data.publishDate)}</span>
+            {
+              post.data.category === "press" && post.data.source && (
+                <>
+                  <span>·</span>
+                  <span>Nguồn: {post.data.source}</span>
+                </>
+              )
+            }
+            <span>·</span>
+            <span>{estimateReadTime(post.body || "")} phút đọc</span>
+          </div>
+
+          {
+            post.data.category === "press" && post.data.source_url && (
+              <div class="animate-reveal mt-6" style="animation-delay: 0.2s;">
+                <a
+                  href={post.data.source_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-2 text-primary-400 hover:text-primary-300 transition-colors text-sm font-medium"
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" y1="14" x2="21" y2="3" />
+                  </svg>
+                  Xem bài viết gốc
+                </a>
+              </div>
+            )
+          }
+        </div>
+      </div>
+
+      {/* Featured Image */}
+      <div
+        class="animate-reveal max-w-5xl mx-auto mt-12"
+        style="animation-delay: 0.25s;"
+      >
+        <div
+          class="relative aspect-[21/9] rounded-2xl overflow-hidden glass-card border-white/10"
+        >
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-dark-800 to-dark-700 flex items-center justify-center placeholder-bg"
+          >
+            <div
+              class="absolute inset-0 bg-gradient-to-br from-primary-500/10 to-accent-purple/10 transition-all duration-500"
+            >
+            </div>
+            <svg
+              width="64"
+              height="64"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="0.5"
+              class="text-white/10"
+            >
+              <path
+                d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"
+                stroke-linecap="round"
+                stroke-linejoin="round"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+          </div>
+          <img
+            src={post.data.image || "/images/blog/fallback.png"}
+            alt={post.data.title}
+            class="absolute inset-0 w-full h-full object-cover z-0"
+            onload="this.parentElement.querySelector('.placeholder-bg').style.display='none'"
+            onerror="this.src='/images/blog/fallback.png'; this.onerror=null;"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Article Content -->
+    <section class="pb-24">
+      <div class="section-container">
+        <div class="max-w-3xl mx-auto prose-content">
+          <Content />
+        </div>
+      </div>
+    </section>
+
+    <!-- Share & Navigation -->
+    <section class="border-t border-white/5 mb-24">
+      <div class="section-container pt-12">
+        <div class="max-w-3xl mx-auto flex items-center justify-between">
+          <a href="/blog" class="btn-secondary text-sm">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M19 12H5M12 19l-7-7 7-7"></path>
+            </svg>
+            Tất cả bài viết
+          </a>
+          <div class="flex items-center gap-2 text-slate-500 text-sm">
+            <span>Chia sẻ:</span>
+            <button
+              onclick="navigator.share?.({title: document.title, url: window.location.href})"
+              class="w-9 h-9 rounded-lg bg-white/5 border border-white/5 flex items-center justify-center hover:bg-primary-500/10 hover:border-primary-500/30 hover:text-primary-400 transition-all"
+              aria-label="Share"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="18" cy="5" r="3"></circle><circle
+                  cx="6"
+                  cy="12"
+                  r="3"></circle><circle cx="18" cy="19" r="3"></circle><line
+                  x1="8.59"
+                  y1="13.51"
+                  x2="15.42"
+                  y2="17.49"></line><line
+                  x1="15.41"
+                  y1="6.51"
+                  x2="8.59"
+                  y2="10.49"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </article>
+</BaseLayout>
+
+<style is:global>
+  /* Blog post typography */
+  .prose-content {
+    font-size: 1.0625rem;
+    line-height: 1.85;
+    color: var(--text-secondary);
+  }
+
+  .prose-content h2 {
+    font-family: var(--font-family-heading);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .prose-content h3 {
+    font-family: var(--font-family-heading);
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .prose-content p {
+    margin-bottom: 1.5rem;
+  }
+
+  .prose-content a {
+    color: #60a5fa;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.2s;
+  }
+
+  .prose-content a:hover {
+    color: #93c5fd;
+  }
+
+  .prose-content strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  .prose-content ul,
+  .prose-content ol {
+    margin-bottom: 1.5rem;
+    padding-left: 1.5rem;
+  }
+
+  .prose-content li {
+    margin-bottom: 0.5rem;
+  }
+
+  .prose-content li::marker {
+    color: #3b82f6;
+  }
+
+  .prose-content blockquote {
+    border-left: 3px solid #3b82f6;
+    padding: 1rem 1.5rem;
+    margin: 2rem 0;
+    background: rgba(59, 130, 246, 0.05);
+    border-radius: 0 8px 8px 0;
+    font-style: italic;
+    color: var(--text-secondary);
+  }
+
+  .prose-content pre {
+    background: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 1.25rem;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+  }
+
+  .prose-content code {
+    font-size: 0.875em;
+    color: #60a5fa;
+  }
+
+  .prose-content pre code {
+    color: #e2e8f0;
+  }
+
+  .prose-content table {
+    width: 100%;
+    margin: 1.5rem 0;
+    border-collapse: collapse;
+  }
+
+  .prose-content th {
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-primary);
+    font-weight: 600;
+    text-align: left;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .prose-content td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .prose-content hr {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    margin: 3rem 0;
+  }
+
+  .prose-content img {
+    border-radius: 12px;
+    margin: 2rem 0;
+  }
+</style>

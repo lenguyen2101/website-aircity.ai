@@ -1,0 +1,520 @@
+/* ===== AirCity Design System (Enterprise Tech) ===== */
+/* Inspired by Chainlink / IOG / Gemini CLI */
+/* Self-hosted fonts via @fontsource (no external CDN) */
+
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/space-grotesk";
+
+@import "tailwindcss";
+
+@layer utilities {
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+}
+
+@theme {
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-300: #93c5fd;
+  --color-primary-400: #60a5fa;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-primary-800: #1e40af;
+  --color-primary-900: #1e3a8a;
+  --color-primary-950: #172554;
+
+  --color-dark-black: #020408;
+  --color-dark-950: #0a0c10;
+  --color-dark-900: #12141c;
+
+  /* Rhythmic Theme Utilities */
+  --color-primary: var(--text-primary);
+  --color-secondary: var(--text-secondary);
+  --color-border-color: var(--border-color);
+  --color-bg-primary: var(--bg-primary);
+
+  /* Semantic Colors */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+
+  /* --- Fonts --- */
+  --font-family-heading: 'Space Grotesk', system-ui, sans-serif;
+  --font-family-body: 'Inter', system-ui, sans-serif;
+  --font-family-code: 'Space Grotesk Variable', 'Space Grotesk', system-ui, sans-serif;
+
+  /* --- Spacing System --- */
+  --spacing-section-gap: 160px;
+  --spacing-container: 1400px;
+
+  /* --- Animation --- */
+  --animate-fade-in-up: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ===== Reset & Base ===== */
+:root {
+  --bg-primary: #020408;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --grid-color: rgba(255, 255, 255, 0.03);
+}
+
+html {
+  font-family: var(--font-family-body);
+  background-color: var(--bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+  color: var(--text-primary);
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  line-height: 1.6;
+  font-weight: 450;
+  /* Slightly heavier than 400 for better dark mode readability */
+}
+
+p {
+  color: var(--text-secondary);
+}
+
+
+/* Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-family-heading);
+  color: var(--text-primary);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  /* Tighter line-height like Chaos Labs */
+}
+
+h1 {
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  letter-spacing: -0.04em;
+  margin-bottom: 2rem;
+}
+
+h2 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  letter-spacing: -0.03em;
+  margin-bottom: 2rem;
+}
+
+p {
+  color: #94a3b8;
+  /* Slate-400 equivalent */
+  margin-bottom: 1.5rem;
+  font-size: 1.125rem;
+  /* 18px */
+}
+
+.font-mono {
+  font-family: var(--font-family-code);
+}
+
+/* ===== Components ===== */
+
+/* 1. Simulation Card (Chaos Labs Style) */
+.tech-card {
+  background-color: rgba(9, 9, 11, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  /* Sharper corners */
+  padding: 40px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Tech corners decoration */
+.tech-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  border-top: 2px solid var(--color-primary-500);
+  border-left: 2px solid var(--color-primary-500);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tech-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  border-bottom: 2px solid var(--color-primary-500);
+  border-right: 2px solid var(--color-primary-500);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tech-card:hover {
+  background-color: rgba(9, 9, 11, 0.9);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.tech-card:hover::before,
+.tech-card:hover::after {
+  opacity: 1;
+}
+
+/* 2. Gradient Text (Subtle, professional) */
+.text-gradient {
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-blue {
+  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* 3. Helper Classes */
+.container-tech {
+  max-width: var(--spacing-container);
+  margin: 0 auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.section-spacing {
+  padding-top: var(--spacing-section-gap);
+  padding-bottom: var(--spacing-section-gap);
+}
+
+/* 4. Form Inputs (Enterprise) */
+.input-tech {
+  width: 100%;
+  background-color: rgba(2, 4, 8, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  /* Sharper */
+  color: #fff;
+  padding: 16px;
+  font-family: var(--font-family-body);
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.input-tech:focus {
+  outline: none;
+  border-color: var(--color-primary-500);
+  background-color: rgba(2, 4, 8, 1);
+  box-shadow: 0 0 0 1px var(--color-primary-500);
+}
+
+.label-tech {
+  display: block;
+  font-family: var(--font-family-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+/* 5. Buttons */
+.btn-primary {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, var(--color-primary-400) 0%, var(--color-primary-600) 40%, var(--color-primary-800) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+  z-index: 1;
+}
+
+/* Glowing Border Sweep */
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(from 0deg,
+      transparent 0%,
+      transparent 40%,
+      #fff 50%,
+      transparent 60%,
+      transparent 100%);
+  animation: rotate-border 4s linear infinite;
+  z-index: -2;
+  opacity: 0.8;
+}
+
+/* Inner Background to keep content clean */
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  background: linear-gradient(135deg, var(--color-primary-500) 0%, var(--color-primary-700) 100%);
+  border-radius: 11px;
+  z-index: -1;
+  transition: all 0.3s ease;
+}
+
+/* Hover Shine Sweep */
+.btn-primary .shine {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent);
+  transition: 0.5s;
+  z-index: 2;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+}
+
+.btn-primary:hover::before {
+  opacity: 1;
+  animation-duration: 2s;
+}
+
+.btn-primary:hover .shine {
+  left: 100%;
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 14px 32px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 15px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+  backdrop-filter: blur(8px);
+}
+
+.btn-secondary:hover {
+  border-color: var(--color-primary-400);
+  background: rgba(59, 130, 246, 0.08);
+  color: var(--color-primary-400);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes rotate-border {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* ===== Section Styles ===== */
+.section-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+@media (min-width: 768px) {
+  .section-container {
+    padding: 0 48px;
+  }
+}
+
+.section-padding {
+  padding-top: 120px;
+  padding-bottom: 120px;
+}
+
+@media (min-width: 768px) {
+  .section-padding {
+    padding-top: 180px;
+    padding-bottom: 180px;
+  }
+}
+
+/* Visual divider between sections */
+.section-divider {
+  position: relative;
+}
+
+.section-divider::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(80%, 600px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.1), transparent);
+}
+
+/* ===== Liquid Glass Navigation (Apple-inspired) ===== */
+/* ===== Liquid Glass Navigation (Tech Style) ===== */
+.liquid-glass-nav {
+  background: rgba(5, 8, 15, 0.85);
+  /* Darker, technical nav */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  /* Crisp separator */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Specular highlight along top edge */
+.liquid-glass-nav::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2) 30%,
+      rgba(255, 255, 255, 0.3) 50%,
+      rgba(255, 255, 255, 0.2) 70%,
+      transparent);
+  pointer-events: none;
+}
+
+/* ===== Animations ===== */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
+  }
+
+  50% {
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.25);
+  }
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-reveal {
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+.animate-reveal.revealed {
+  animation: reveal-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ===== Grid Background Pattern ===== */
+.grid-pattern {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black, transparent);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black, transparent);
+}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-dark-950);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-dark-600);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary-600);
+}
+
+/* ===== Selection ===== */
+::selection {
+  background: rgba(59, 130, 246, 0.3);
+  color: white;
+}

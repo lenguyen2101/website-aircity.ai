@@ -1,0 +1,60 @@
+---
+import Reveal from "./Reveal.astro";
+
+interface Props {
+    badge?: string;
+    title: string;
+    subtitle?: string;
+    align?: "left" | "center" | "right";
+    className?: string;
+}
+
+const {
+    badge,
+    title,
+    subtitle,
+    align = "center",
+    className = "",
+} = Astro.props;
+
+const alignClasses = {
+    left: "text-left",
+    center: "text-center mx-auto",
+    right: "text-right ml-auto",
+};
+---
+
+<div class:list={["max-w-3xl mb-16", alignClasses[align], className]}>
+    {
+        badge && (
+            <Reveal>
+                <div
+                    class:list={[
+                        "inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary-500/10 border border-primary-500/20 mb-6",
+                        align === "center" ? "mx-auto" : "",
+                    ]}
+                >
+                    <span class="text-primary-400 text-xs font-semibold uppercase tracking-wider">
+                        {badge}
+                    </span>
+                </div>
+            </Reveal>
+        )
+    }
+
+    <Reveal delay={0.1}>
+        <h2
+            class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight"
+            set:html={title}
+        >
+        </h2>
+    </Reveal>
+
+    {
+        subtitle && (
+            <Reveal delay={0.2}>
+                <p class="text-slate-400 text-lg leading-relaxed">{subtitle}</p>
+            </Reveal>
+        )
+    }
+</div>

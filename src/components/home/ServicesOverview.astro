@@ -1,0 +1,107 @@
+---
+import { getLangFromUrl, useTranslations, useTranslatedPath } from '../../i18n/utils';
+import Section from '../common/ui/Section.astro';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const translatePath = useTranslatedPath(lang);
+
+interface Props {
+  theme?: "light" | "dark";
+}
+
+const { theme = "light" } = Astro.props;
+
+const services = [
+  {
+    id: '01',
+    title: t('home.services.items.01.title'),
+    desc: t('home.services.items.01.desc'),
+    icon: 'building',
+    anchor: 'building'
+  },
+  {
+    id: '02',
+    title: t('home.services.items.02.title'),
+    desc: t('home.services.items.02.desc'),
+    icon: 'scan',
+    anchor: 'face'
+  },
+  {
+    id: '03',
+    title: t('home.services.items.03.title'),
+    desc: t('home.services.items.03.desc'),
+    icon: 'smartphone',
+    anchor: 'app'
+  },
+  {
+    id: '04',
+    title: t('home.services.items.04.title'),
+    desc: t('home.services.items.04.desc'),
+    icon: 'cpu',
+    anchor: 'iot'
+  },
+  {
+    id: '05',
+    title: t('home.services.items.05.title'),
+    desc: t('home.services.items.05.desc'),
+    icon: 'credit-card',
+    anchor: 'payment'
+  },
+  {
+    id: '06',
+    title: t('home.services.items.06.title'),
+    desc: t('home.services.items.06.desc'),
+    icon: 'bar-chart',
+    anchor: 'consulting'
+  }
+];
+---
+
+<Section theme={theme}>
+  <div class="flex items-end justify-between mb-12">
+      <div>
+          <div class="text-primary-500 font-mono text-xs tracking-[0.2em] mb-4 uppercase flex items-center gap-3">
+              <span class="w-2 h-2 rounded-full bg-primary-500 animate-pulse"></span>
+              0x00A1 // {t('home.services.capabilities')}
+          </div>
+          <h2 class="text-primary max-w-2xl leading-[0.9] tracking-tighter mb-4">
+              {t('home.services.title_p1')} <br/>
+              <span class="gradient-text">{t('home.services.title_p2')}</span>
+          </h2>
+      </div>
+        <div class="hidden md:block text-right">
+            <div class="text-secondary font-mono text-xs uppercase">
+                {t('home.services.system_status')} <span class="text-green-400">{t('home.services.operational')}</span> <br/>
+                {t('home.services.available_nodes')} {services.length}
+            </div>
+        </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {services.map((service) => (
+        <a href={translatePath(`/services#${service.anchor}`)} class="tech-card group cursor-pointer block relative">
+          <!-- Hover Effect: Corner Flash -->
+          <div class="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="text-primary-500">
+                <path d="M7 17L17 7M17 7H7M17 7V17" stroke-width="2" stroke-linecap="square"/>
+            </svg>
+          </div>
+
+          <div class="font-mono text-primary-500/50 text-sm mb-6">
+            {service.id}
+          </div>
+          
+          <h3 class="text-xl text-primary font-bold mb-4 group-hover:text-primary-500 transition-colors">
+            {service.title.replace(/_/g, ' ')}
+          </h3>
+          
+          <p class="text-secondary text-sm leading-relaxed mb-6">
+            {service.desc}
+          </p>
+
+          <div class="w-full h-[1px] bg-border-color group-hover:bg-primary-500/50 transition-colors"></div>
+        </a>
+      ))}
+    </div>
+</Section>

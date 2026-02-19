@@ -1,0 +1,218 @@
+---
+import { companyInfo } from "../../data/navigation";
+import {
+  getLangFromUrl,
+  useTranslations,
+  useTranslatedPath,
+} from "../../i18n/utils";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const translatePath = useTranslatedPath(lang);
+
+const navItems = [
+  { label: t("nav.home"), href: translatePath("/") },
+  { label: t("nav.about"), href: translatePath("/about") },
+  { label: t("nav.services"), href: translatePath("/services") },
+  { label: t("nav.blog"), href: translatePath("/blog") },
+  { label: t("nav.contact"), href: translatePath("/contact") },
+];
+---
+
+<footer class="relative border-t border-white/5 bg-dark-950 overflow-hidden">
+  <!-- Grid Background for Footer -->
+  <div class="absolute inset-0 pointer-events-none opacity-20">
+    <div
+      class="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px]"
+    >
+    </div>
+  </div>
+
+  <div class="container-tech relative z-10">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-12 py-20">
+      <!-- Brand Column -->
+      <div class="md:col-span-4 space-y-6">
+        <a href={translatePath("/")} class="flex items-center gap-3">
+          <div class="w-10 h-10 flex items-center justify-center">
+            <img
+              src="/logo.png"
+              alt="AirCity Logo"
+              class="w-full h-full object-contain"
+            />
+          </div>
+          <span class="text-2xl font-bold text-primary tracking-tight"
+            >AirCity</span
+          >
+        </a>
+        <p class="text-secondary text-sm leading-relaxed max-w-sm">
+          {t("footer.description")}
+        </p>
+
+        <div class="flex gap-4 pt-4">
+          <a
+            href={companyInfo.social.facebook}
+            target="_blank"
+            class="text-slate-500 hover:text-white transition-colors"
+            ><span class="sr-only">Facebook</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"
+              ><path
+                d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
+              ></path>
+            </svg>
+          </a>
+          <a
+            href={companyInfo.social.linkedin}
+            target="_blank"
+            class="text-slate-500 hover:text-white transition-colors"
+            ><span class="sr-only">LinkedIn</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"
+              ><path
+                d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+              ></path><rect x="2" y="9" width="4" height="12"></rect><circle
+                cx="4"
+                cy="4"
+                r="2"></circle>
+            </svg>
+          </a>
+          <a
+            href={companyInfo.social.youtube}
+            target="_blank"
+            class="text-slate-500 hover:text-white transition-colors"
+            ><span class="sr-only">Youtube</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"
+              ><path
+                d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"
+              ></path><polygon
+                points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Links Column 1 -->
+      <div class="md:col-span-2 md:col-start-6 lg:col-start-6">
+        <h4
+          class="font-mono text-sm text-primary-500 mb-6 tracking-widest uppercase"
+        >
+          // {t("footer.nav")}
+        </h4>
+        <ul class="space-y-3">
+          {
+            navItems.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  class="text-secondary hover:text-primary transition-colors text-sm font-mono font-bold"
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <!-- Links Column 2 -->
+      <div class="md:col-span-2">
+        <h4
+          class="font-mono font-bold text-sm text-primary-500 mb-6 tracking-widest uppercase"
+        >
+          // {t("footer.modules")}
+        </h4>
+        <ul class="space-y-3">
+          <li>
+            <a
+              href={translatePath("/services#smart-building")}
+              class="text-secondary hover:text-primary transition-colors text-sm font-mono font-bold"
+              >{t("footer.module.building_os")}</a
+            >
+          </li>
+          <li>
+            <a
+              href={translatePath("/services#face-recognition")}
+              class="text-secondary hover:text-primary transition-colors text-sm font-mono font-bold"
+              >{t("footer.module.face_id")}</a
+            >
+          </li>
+          <li>
+            <a
+              href={translatePath("/services#iot-platform")}
+              class="text-secondary hover:text-primary transition-colors text-sm font-mono font-bold"
+              >{t("footer.module.iot")}</a
+            >
+          </li>
+          <li>
+            <a
+              href={translatePath("/services#digital-payment")}
+              class="text-secondary hover:text-primary transition-colors text-sm font-mono font-bold"
+              >{t("footer.module.payments")}</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <!-- Contact Column -->
+      <div class="md:col-span-2">
+        <h4
+          class="font-mono font-bold text-xs text-primary-500 mb-6 tracking-widest uppercase"
+        >
+          // {t("footer.contact")}
+        </h4>
+        <ul class="space-y-4">
+          <li class="flex items-start gap-3 text-sm font-mono font-bold">
+            <svg
+              class="w-4 h-4 text-slate-500 mt-0.5 shrink-0"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <span class="text-secondary text-sm leading-relaxed"
+              >{companyInfo.address}</span
+            >
+          </li>
+          <li class="flex items-center gap-3">
+            <svg
+              class="w-4 h-4 text-slate-500 shrink-0"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+            </svg>
+            <a
+              href={`mailto:${companyInfo.email}`}
+              class="text-secondary hover:text-primary transition-colors text-sm font-mono font-bold"
+              >{companyInfo.email}</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div
+      class="border-t border-white/5 py-8 flex flex-col md:flex-row items-center justify-between gap-4 font-mono font-bold"
+    >
+      <div class="text-secondary/60 text-sm uppercase">
+        SYSTEM ID: AC-{new Date().getFullYear()}.04 // {t("footer.rights")}
+      </div>
+      <div class="flex items-center gap-6">
+        <a
+          href="#"
+          class="text-secondary/60 hover:text-secondary transition-colors text-sm uppercase"
+          >{t("footer.privacy")}</a
+        >
+        <a
+          href="#"
+          class="text-secondary/60 hover:text-secondary transition-colors text-sm uppercase"
+          >{t("footer.terms")}</a
+        >
+      </div>
+    </div>
+  </div>
+</footer>

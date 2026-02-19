@@ -1,0 +1,7 @@
+# AirCity Website
+# https://aircity.ai
+
+User-agent: *
+Allow: /
+
+Sitemap: https://aircity.ai/sitemap-index.xml

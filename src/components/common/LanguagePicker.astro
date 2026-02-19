@@ -1,0 +1,71 @@
+---
+import { languages } from "../../i18n/ui"; // Correct import path
+import { getLangFromUrl, useTranslatedPath } from "../../i18n/utils";
+
+const lang = getLangFromUrl(Astro.url);
+const translatePath = useTranslatedPath(lang);
+const currentPath = Astro.url.pathname;
+
+// Function to get the path for a different language
+// This is a simplified version. A robust solution would need to handle
+// route translation if routes are localized (e.g. /about vs /gioi-thieu)
+// For now we assume consistent routing /vi/page and /en/page
+function getPathForLang(targetLang: string) {
+    if (lang === targetLang) return currentPath;
+
+    // Remove current lang prefix if present
+    let path = currentPath;
+    const parts = path.split("/");
+    if (Object.keys(languages).includes(parts[1])) {
+        path = "/" + parts.slice(2).join("/");
+    } else if (lang === "vi") {
+        // Default lang 'vi' might not have prefix if configured that way
+        // path is already clean
+    }
+
+    // Use translatePath to ensure correct prefix
+    return translatePath(path, targetLang);
+}
+---
+
+<div
+    class="flex items-center gap-3 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:border-primary-500/50 transition-colors group/lp"
+>
+    <svg
+        class="w-3.5 h-3.5 text-secondary group-hover/lp:text-primary-400 transition-colors"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+    >
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="2" y1="12" x2="22" y2="12"></line>
+        <path
+            d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+        ></path>
+    </svg>
+    <div class="flex items-center gap-2">
+        {
+            Object.entries(languages).map(([key, label], index) => (
+                <>
+                    <a
+                        href={getPathForLang(key)}
+                        class:list={[
+                            "text-sm font-mono transition-all uppercase tracking-wider hover:scale-105",
+                            lang === key
+                                ? "text-primary-400 font-bold"
+                                : "text-secondary hover:text-primary",
+                        ]}
+                    >
+                        {key}
+                    </a>
+                    {index < Object.entries(languages).length - 1 && (
+                        <span class="w-[1px] h-3 bg-white/10" />
+                    )}
+                </>
+            ))
+        }
+    </div>
+</div>

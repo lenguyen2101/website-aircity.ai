@@ -1,0 +1,23 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import HeroSection from "../../components/home/HeroSection.astro";
+import ServicesOverview from "../../components/home/ServicesOverview.astro";
+import WhyChooseUs from "../../components/home/WhyChooseUs.astro";
+import CTASection from "../../components/home/CTASection.astro";
+import Investors from "../../components/common/Investors.astro";
+import { getLangFromUrl, useTranslations } from "../../i18n/utils";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<BaseLayout
+    title={t("nav.home") + " | AirCity"}
+    description="Vietnam's leading AI & IoT platform for smart building management."
+>
+    <HeroSection />
+    <ServicesOverview theme="dark" />
+    <WhyChooseUs theme="dark" />
+    <CTASection theme="dark" />
+    <Investors />
+</BaseLayout>
