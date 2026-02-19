@@ -11,7 +11,7 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 ---
 
-<BaseLayout title={t("nav.home") + " | AirCity"}>
+<BaseLayout title={t("home.title" as any)}>
   <HeroSection />
   <ServicesOverview theme="dark" />
   <WhyChooseUs theme="dark" />

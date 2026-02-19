@@ -9,6 +9,7 @@ export const showDefaultLang = false;
 export const ui = {
     vi: {
         'nav.home': 'Trang chủ',
+        'home.title': 'AirCity - Nền tảng Quản lý Tòa nhà Thông minh | AI & IoT',
         'nav.about': 'Giới thiệu',
         'nav.services': 'Dịch vụ',
         'nav.blog': 'Blog',
@@ -193,6 +194,7 @@ export const ui = {
     },
     en: {
         'nav.home': 'Home',
+        'home.title': 'AirCity - Smart Building Management Platform | AI & IoT',
         'nav.about': 'About',
         'nav.services': 'Services',
         'nav.blog': 'Blog',

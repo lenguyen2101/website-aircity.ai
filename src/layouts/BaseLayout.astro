@@ -27,6 +27,19 @@ const canonicalURL = new URL(
   Astro.site || Astro.url.origin
 );
 const socialImageURL = new URL(image, Astro.url);
+
+// i18n hreflang logic
+const pathname = Astro.url.pathname;
+const siteUrl =
+  Astro.site?.toString().replace(/\/$/, "") || "https://aircity.ai";
+let viPath: string, enPath: string;
+if (pathname.startsWith("/en/") || pathname === "/en") {
+  enPath = pathname;
+  viPath = pathname.replace(/^\/en\/?/, "/") || "/";
+} else {
+  viPath = pathname;
+  enPath = `/en${pathname === "/" ? "" : pathname}`;
+}
 ---
 
 <!DOCTYPE html>
@@ -58,36 +71,76 @@ const socialImageURL = new URL(image, Astro.url);
     <meta property="twitter:image" content={socialImageURL} />
 
     <!-- Fonts: Self-hosted via @fontsource in global.css -->
+
+    <!-- i18n hreflang tags -->
+    <link rel="alternate" hreflang="vi" href={`${siteUrl}${viPath}`} />
+    <link rel="alternate" hreflang="en" href={`${siteUrl}${enPath}`} />
+    <link rel="alternate" hreflang="x-default" href={`${siteUrl}${viPath}`} />
+
+    <!-- JSON-LD Structured Data -->
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            name: "AirCity",
+            url: "https://aircity.ai",
+            logo: "https://aircity.ai/logo.png",
+            description:
+              "Nền tảng quản lý tòa nhà thông minh hàng đầu Việt Nam, ứng dụng AI & IoT.",
+            address: {
+              "@type": "PostalAddress",
+              streetAddress: "65 Mai Chí Thọ, Phường Bình Trưng",
+              addressLocality: "TP. Hồ Chí Minh",
+              addressCountry: "VN",
+            },
+            telephone: "028 3970 6884",
+            email: "hello@aircity.ai",
+            sameAs: [
+              "https://facebook.com/aircity.ai",
+              "https://linkedin.com/company/aircity",
+              "https://youtube.com/@aircity",
+            ],
+          },
+          {
+            "@type": "WebSite",
+            name: "AirCity",
+            url: "https://aircity.ai",
+            inLanguage: ["vi", "en"],
+          },
+        ],
+      })}
+    ></script>
   </head>
-  <body class="antialiased selection:bg-primary-500/30 selection:text-white">
-    <Header />
-    <main
-      class:list={["min-h-screen pt-20", !fullWidth && "overflow-x-hidden"]}
-    >
-      <slot />
-    </main>
-    <Footer />
 
-    <!-- Scroll Reveal Script -->
-    <script>
-      // Only verify if we have elements to animate, otherwise this script is lightweight enough
-      const observerOptions = {
-        threshold: 0.1,
-        rootMargin: "0px 0px -50px 0px",
-      };
+  <Header />
+  <main class:list={["min-h-screen pt-20", !fullWidth && "overflow-x-hidden"]}>
+    <slot />
+  </main>
+  <Footer />
 
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("revealed");
-            observer.unobserve(entry.target);
-          }
-        });
-      }, observerOptions);
+  <!-- Scroll Reveal Script -->
+  <script>
+    // Only verify if we have elements to animate, otherwise this script is lightweight enough
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: "0px 0px -50px 0px",
+    };
 
-      document.querySelectorAll(".animate-reveal").forEach((el) => {
-        observer.observe(el);
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("revealed");
+          observer.unobserve(entry.target);
+        }
       });
-    </script>
-  </body>
+    }, observerOptions);
+
+    document.querySelectorAll(".animate-reveal").forEach((el) => {
+      observer.observe(el);
+    });
+  </script>
+
 </html>
